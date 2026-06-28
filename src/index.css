@@ -93,8 +93,8 @@ button:focus-visible {
 
   .editor-content {
     background-color: rgba(0, 0, 0, 0.1);
-    height: 100vh;
-    width: 100vw;
+    height: stretch;
+    width: stretch;
     overflow: auto;
     display: flex;
     justify-content: center;
@@ -250,6 +250,7 @@ button:focus-visible {
         display: flex;
         flex-direction: row;
         background-color: var(--offwhite);
+        height: 100%;
         aside {
           padding: 0.5rem;
           position: relative;
@@ -274,7 +275,7 @@ button:focus-visible {
         .sections-column {
           padding: 0 1.5rem;
           article:first-child {
-            padding-top: 49px;
+            padding-top: 1rem;
           }
         }
 
@@ -526,6 +527,12 @@ button:focus-visible {
     display: none;
   }
 
+  .section-lock-btn,
+  .section-delete-btn,
+  .section-add-btn {
+    display: none;
+  }
+
   .section-title,
   .section-body {
     border: none;
@@ -599,7 +606,7 @@ button:focus-visible {
 
 .dropzone:hover {
   background-color: rgba(255, 152, 0, 0.05);
-  border: 2px dashed #ff9800;
+  /* border: 2px dashed #ff9800; */
 }
 
 /* Article styling for drag-and-drop */
@@ -721,6 +728,116 @@ article[draggable='true']:active {
   background-color: rgba(244, 67, 54, 0.2) !important;
 }
 
+.section-delete-btn {
+  padding: 6px 10px !important;
+  background-color: transparent !important;
+  border: 1px solid rgba(198, 40, 40, 0.3) !important;
+  border-radius: 4px !important;
+  cursor: pointer !important;
+  font-size: 1.2rem !important;
+  transition: all 0.2s !important;
+  flex-shrink: 0;
+  margin-left: 4px;
+}
+
+.section-delete-btn:hover {
+  background-color: rgba(198, 40, 40, 0.1) !important;
+  border-color: rgba(198, 40, 40, 0.5) !important;
+}
+
+.section-delete-btn:active {
+  background-color: rgba(198, 40, 40, 0.2) !important;
+}
+
+.section-add-btn {
+  width: 100%;
+  padding: 0.75rem !important;
+  background-color: #1976d2 !important;
+  color: rgba(255, 255, 255, 0.95) !important;
+  border: none !important;
+  border-radius: 4px !important;
+  cursor: pointer !important;
+  font-weight: 500 !important;
+  font-size: 0.875rem !important;
+  margin-top: 1rem;
+  transition: background-color 0.2s ease !important;
+}
+
+.section-add-btn:hover {
+  background-color: #1565c0 !important;
+}
+
+/* Delete Confirmation Modal */
+.delete-confirm-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+}
+
+.delete-confirm-modal .modal-content {
+  background-color: white;
+  padding: 32px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  max-width: 400px;
+  text-align: center;
+}
+
+.delete-confirm-modal h3 {
+  margin: 0 0 16px 0;
+  font-size: 1.25rem;
+  color: rgba(0, 0, 0, 0.87);
+}
+
+.delete-confirm-modal p {
+  margin: 0 0 24px 0;
+  color: rgba(0, 0, 0, 0.67);
+  line-height: 1.5;
+}
+
+.modal-buttons {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.modal-cancel-btn {
+  padding: 10px 24px !important;
+  background-color: #e0e0e0 !important;
+  color: rgba(0, 0, 0, 0.87) !important;
+  border: none !important;
+  border-radius: 4px !important;
+  cursor: pointer !important;
+  font-weight: 500 !important;
+  transition: background-color 0.2s !important;
+}
+
+.modal-cancel-btn:hover {
+  background-color: #d0d0d0 !important;
+}
+
+.modal-delete-btn {
+  padding: 10px 24px !important;
+  background-color: #c62828 !important;
+  color: rgba(255, 255, 255, 0.95) !important;
+  border: none !important;
+  border-radius: 4px !important;
+  cursor: pointer !important;
+  font-weight: 500 !important;
+  transition: background-color 0.2s !important;
+}
+
+.modal-delete-btn:hover {
+  background-color: #b71c1c !important;
+}
+
 .section-body {
   width: 100%;
   margin-top: 0.5rem;
@@ -761,7 +878,7 @@ article[draggable='true']:active {
   }
 
   .cv-content {
-    flex-direction: column;
+    flex-direction: column;    
   }
 
   aside {

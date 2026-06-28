@@ -58,7 +58,15 @@ Why pnpm:
 - [x] Add "Reset" button to clear saved data and start fresh.
 - [x] Ensure data persists across browser sessions.
 
-## 8) Execution order
+## 8) Sections Management
+
+- [x] Add "Add Section" button to create new sections dynamically.
+- [x] Implement delete functionality for sections with confirmation dialog.
+- [x] Ensure new sections are properly initialized with default values.
+- [x] Persist section additions/deletions to localStorage.
+- [x] Add visual feedback for section creation and deletion actions.
+
+## 9) Execution order
 
 1. Package manager migration to pnpm.
 2. Testing stack setup and baseline tests.
@@ -67,3 +75,4 @@ Why pnpm:
 5. Skills section enhancement.
 6. Drag-and-drop and interaction improvements.
 7. Responsive design and print optimization.
+8. Sections management (add/delete).

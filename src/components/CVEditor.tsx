@@ -12,6 +12,7 @@ const CVEditor = ({ cvData, setCVData, isSaving }: CVEditorProps) => {
     const [draggedSkillId, setDraggedSkillId] = useState<string | null>(null)
     const [isHeaderEditing, setIsHeaderEditing] = useState(false)
     const [isPersonalEditing, setIsPersonalEditing] = useState(false)
+    const [sectionToDelete, setSectionToDelete] = useState<string | null>(null)
 
     const sections = cvData.sections || []
 
@@ -152,6 +153,30 @@ const CVEditor = ({ cvData, setCVData, isSaving }: CVEditorProps) => {
                 section.id === sectionId ? { ...section, locked: !section.locked } : section,
             ),
         }))
+    }
+
+    const addSection = () => {
+        const newSectionId = `section-${Date.now()}`
+        setCVData((prev) => ({
+            ...prev,
+            sections: [
+                ...(prev.sections || []),
+                {
+                    id: newSectionId,
+                    title: 'New Section',
+                    body: 'Add your content here...',
+                    locked: false,
+                },
+            ],
+        }))
+    }
+
+    const deleteSection = (sectionId: string) => {
+        setCVData((prev) => ({
+            ...prev,
+            sections: (prev.sections || []).filter((section) => section.id !== sectionId),
+        }))
+        setSectionToDelete(null)
     }
 
     return (
@@ -389,12 +414,46 @@ const CVEditor = ({ cvData, setCVData, isSaving }: CVEditorProps) => {
                                     >
                                         {section.locked ? '🔒' : '🔓'}
                                     </button>
+                                    <button
+                                        onClick={() => setSectionToDelete(section.id)}
+                                        className="section-delete-btn"
+                                        title="Delete section"
+                                        aria-label={`Delete ${section.title} section`}
+                                    >
+                                        ×
+                                    </button>
                                 </article>
                             </section>
                         ))}
+                        <button onClick={addSection} className="section-add-btn">
+                            + Add Section
+                        </button>
                     </section>
                 </div>
             </article>
+
+            {sectionToDelete && (
+                <div className="delete-confirm-modal">
+                    <div className="modal-content">
+                        <h3>Delete Section?</h3>
+                        <p>Are you sure you want to delete this section? This action cannot be undone.</p>
+                        <div className="modal-buttons">
+                            <button 
+                                onClick={() => setSectionToDelete(null)} 
+                                className="modal-cancel-btn"
+                            >
+                                Cancel
+                            </button>
+                            <button 
+                                onClick={() => deleteSection(sectionToDelete)} 
+                                className="modal-delete-btn"
+                            >
+                                Delete
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </section>
     )
 }
