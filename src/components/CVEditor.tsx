@@ -1,35 +1,19 @@
 import { useState } from 'react'
+import type { CVData } from '../App'
 
-type CVSection = {
-    id: string
-    title: string
-    body: string
+interface CVEditorProps {
+  cvData: CVData
+  setCVData: (data: CVData | ((prev: CVData) => CVData)) => void
+  isSaving: boolean
 }
 
-const initialSections: CVSection[] = [
-    {
-        id: 'summary',
-        title: 'Summary',
-        body:
-            'Web UI developer with over 15 years of experience, passionate about creating intuitive, user-friendly websites and applications.',
-    },
-    {
-        id: 'experience',
-        title: 'Experience',
-        body:
-            'Senior UI Developer delivering React and TypeScript solutions, collaborating in agile teams, and improving product quality through maintainable frontend architecture.',
-    },
-    {
-        id: 'projects',
-        title: 'Projects',
-        body:
-            'Built admin dashboards, design system components, and internal tooling with a focus on performance and accessibility.',
-    },
-]
-
-const CVEditor = () => {
-    const [sections, setSections] = useState<CVSection[]>(initialSections)
+const CVEditor = ({ cvData, setCVData, isSaving }: CVEditorProps) => {
     const [draggedSectionId, setDraggedSectionId] = useState<string | null>(null)
+    const [draggedSkillId, setDraggedSkillId] = useState<string | null>(null)
+    const [isHeaderEditing, setIsHeaderEditing] = useState(false)
+    const [isPersonalEditing, setIsPersonalEditing] = useState(false)
+
+    const sections = cvData.sections || []
 
     const moveSection = (sourceId: string, targetId: string) => {
         if (sourceId === targetId) {
@@ -46,54 +30,309 @@ const CVEditor = () => {
         const nextSections = [...sections]
         const [movedSection] = nextSections.splice(sourceIndex, 1)
         nextSections.splice(targetIndex, 0, movedSection)
-        setSections(nextSections)
+        setCVData((prev) => ({ ...prev, sections: nextSections }))
+    }
+
+    const updateSectionTitle = (sectionId: string, newTitle: string) => {
+        setCVData((prev) => ({
+            ...prev,
+            sections: (prev.sections || []).map((item) =>
+                item.id === sectionId ? { ...item, title: newTitle } : item,
+            ),
+        }))
+    }
+
+    const updateSectionBody = (sectionId: string, newBody: string) => {
+        setCVData((prev) => ({
+            ...prev,
+            sections: (prev.sections || []).map((item) =>
+                item.id === sectionId ? { ...item, body: newBody } : item,
+            ),
+        }))
+    }
+
+    const updateHeader = (field: 'name' | 'title', value: string) => {
+        setCVData((prev) => ({
+            ...prev,
+            header: { ...prev.header, [field]: value },
+        }))
+    }
+
+    const updatePersonal = (field: 'phone' | 'email', value: string) => {
+        setCVData((prev) => ({
+            ...prev,
+            personal: { ...prev.personal, [field]: value },
+        }))
+    }
+
+    const updateSkillName = (skillId: string, newName: string) => {
+        setCVData((prev) => ({
+            ...prev,
+            skills: prev.skills.map((skill) =>
+                skill.id === skillId ? { ...skill, name: newName.trim() } : skill,
+            ),
+        }))
+    }
+
+    const updateSkillProgress = (skillId: string, newProgress: number) => {
+        // Clamp progress value between 0 and 100
+        const clampedProgress = Math.max(0, Math.min(100, newProgress))
+        setCVData((prev) => ({
+            ...prev,
+            skills: prev.skills.map((skill) =>
+                skill.id === skillId ? { ...skill, progress: clampedProgress } : skill,
+            ),
+        }))
+    }
+
+    const moveSkill = (sourceId: string, targetId: string) => {
+        if (sourceId === targetId) {
+            return
+        }
+
+        const sourceIndex = cvData.skills.findIndex((skill) => skill.id === sourceId)
+        const targetIndex = cvData.skills.findIndex((skill) => skill.id === targetId)
+
+        if (sourceIndex < 0 || targetIndex < 0) {
+            return
+        }
+
+        const nextSkills = [...cvData.skills]
+        const [movedSkill] = nextSkills.splice(sourceIndex, 1)
+        nextSkills.splice(targetIndex, 0, movedSkill)
+        setCVData((prev) => ({ ...prev, skills: nextSkills }))
+    }
+
+    const copySkill = (skillId: string) => {
+        const skillToCopy = cvData.skills.find((skill) => skill.id === skillId)
+        if (!skillToCopy) {
+            return
+        }
+
+        const newSkillId = `skill-${Date.now()}`
+        setCVData((prev) => ({
+            ...prev,
+            skills: [
+                ...prev.skills,
+                {
+                    id: newSkillId,
+                    name: `${skillToCopy.name} (Copy)`,
+                    progress: skillToCopy.progress,
+                },
+            ],
+        }))
+    }
+
+    const addSkill = () => {
+        const newSkillId = `skill-${Date.now()}`
+        setCVData((prev) => ({
+            ...prev,
+            skills: [
+                ...prev.skills,
+                {
+                    id: newSkillId,
+                    name: 'New Skill',
+                    progress: 50,
+                },
+            ],
+        }))
+    }
+
+    const deleteSkill = (skillId: string) => {
+        setCVData((prev) => ({
+            ...prev,
+            skills: prev.skills.filter((skill) => skill.id !== skillId),
+        }))
+    }
+
+    const toggleSectionLock = (sectionId: string) => {
+        setCVData((prev) => ({
+            ...prev,
+            sections: (prev.sections || []).map((section) =>
+                section.id === sectionId ? { ...section, locked: !section.locked } : section,
+            ),
+        }))
     }
 
     return (
         <section className="editor-content frame-container" aria-label="CV editor">
+            {isSaving && (
+                <output className="autosave-indicator">
+                    <span className="saving-dot">●</span>
+                    {' Saving...'}
+                </output>
+            )}
             <article className="cv-frame">
                 <header>
-                    <section>
-                        <h2>Arpad Csikos</h2>
-                        <h3>Senior UI Developer</h3>
-                    </section>
+                    {isHeaderEditing ? (
+                        <section className="header-edit">
+                            <div className="edit-group">
+                                <label htmlFor="header-name">Name</label>
+                                <input
+                                    id="header-name"
+                                    type="text"
+                                    value={cvData.header.name}
+                                    onChange={(e) => updateHeader('name', e.target.value)}
+                                    placeholder="Full Name"
+                                />
+                            </div>
+                            <div className="edit-group">
+                                <label htmlFor="header-title">Title</label>
+                                <input
+                                    id="header-title"
+                                    type="text"
+                                    value={cvData.header.title}
+                                    onChange={(e) => updateHeader('title', e.target.value)}
+                                    placeholder="Job Title"
+                                />
+                            </div>
+                            <button onClick={() => setIsHeaderEditing(false)} className="edit-done">
+                                Done
+                            </button>
+                        </section>
+                    ) : (
+                        <button
+                            onClick={() => setIsHeaderEditing(true)}
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter' || e.key === ' ') {
+                                    e.preventDefault()
+                                    setIsHeaderEditing(true)
+                                }
+                            }}
+                            className="header-display"
+                            aria-label="Click to edit header information"
+                        >
+                            <h2>{cvData.header.name}</h2>
+                            <h3>{cvData.header.title}</h3>
+                            <div className="header-edit-hint">Click to edit</div>
+                        </button>
+                    )}
                 </header>
 
                 <div className="cv-content">
                     <aside>
                         <h2>Personal</h2>
-                        <ul>
-                            <li>+36302807143</li>
-                            <li>arpad.csikos@gmail.com</li>
-                        </ul>
+                        {isPersonalEditing ? (
+                            <section className="personal-edit">
+                                <div className="edit-group">
+                                    <label htmlFor="personal-phone">Phone</label>
+                                    <input
+                                        id="personal-phone"
+                                        type="text"
+                                        value={cvData.personal.phone}
+                                        onChange={(e) => updatePersonal('phone', e.target.value)}
+                                        placeholder="Phone number"
+                                    />
+                                </div>
+                                <div className="edit-group">
+                                    <label htmlFor="personal-email">Email</label>
+                                    <input
+                                        id="personal-email"
+                                        type="email"
+                                        value={cvData.personal.email}
+                                        onChange={(e) => updatePersonal('email', e.target.value)}
+                                        placeholder="Email address"
+                                    />
+                                </div>
+                                <button onClick={() => setIsPersonalEditing(false)} className="edit-done">
+                                    Done
+                                </button>
+                            </section>
+                        ) : (
+                            <button
+                                onClick={() => setIsPersonalEditing(true)}
+                                onKeyDown={(e) => {
+                                    if (e.key === 'Enter' || e.key === ' ') {
+                                        e.preventDefault()
+                                        setIsPersonalEditing(true)
+                                    }
+                                }}
+                                className="personal-display"
+                                aria-label="Click to edit personal information"
+                            >
+                                <ul>
+                                    <li>{cvData.personal.phone}</li>
+                                    <li>{cvData.personal.email}</li>
+                                </ul>
+                                <div className="personal-edit-hint">Click to edit</div>
+                            </button>
+                        )}
 
                         <h2>Skills</h2>
-                        <ul>
-                            <li>
-                                React.js
-                                <progress value="80" max="100" aria-label="React.js skill level" />
-                            </li>
-                            <li>
-                                JavaScript, Ecmascript
-                                <progress value="80" max="100" aria-label="JavaScript skill level" />
-                            </li>
-                            <li>
-                                TypeScript
-                                <progress value="80" max="100" aria-label="TypeScript skill level" />
-                            </li>
-                            <li>
-                                CSS, Sass
-                                <progress value="80" max="100" aria-label="CSS skill level" />
-                            </li>
+                        <ul className="skills-list">
+                            {cvData.skills.map((skill) => (
+                                <li 
+                                    key={skill.id} 
+                                    className={`skill-item ${draggedSkillId === skill.id ? 'dragging' : ''}`}
+                                    draggable
+                                    onDragStart={() => setDraggedSkillId(skill.id)}
+                                    onDragEnd={() => setDraggedSkillId(null)}
+                                    onDragOver={(event) => event.preventDefault()}
+                                    onDrop={() => {
+                                        if (draggedSkillId) {
+                                            moveSkill(draggedSkillId, skill.id)
+                                            setDraggedSkillId(null)
+                                        }
+                                    }}
+                                >
+                                    <div className="skill-drag-handle" title="Drag to reorder">
+                                        <span>⋮</span>
+                                    </div>
+                                    <div className="skill-content">
+                                        <input
+                                            type="text"
+                                            value={skill.name}
+                                            onChange={(e) => updateSkillName(skill.id, e.target.value)}
+                                            className={`skill-name-input ${skill.name.trim() === '' ? 'invalid' : ''}`}
+                                            placeholder="Skill name"
+                                            aria-label={`Skill name: ${skill.name}`}
+                                        />
+                                        <div className="skill-progress-container">
+                                            <input
+                                                type="range"
+                                                min="0"
+                                                max="100"
+                                                value={skill.progress}
+                                                onChange={(e) => updateSkillProgress(skill.id, Number(e.target.value))}
+                                                className="skill-progress-slider"
+                                                aria-label={`${skill.name} progress`}
+                                            />
+                                            <span className="skill-progress-value">{skill.progress}%</span>
+                                        </div>
+                                    </div>
+                                    <div className="skill-actions">
+                                        <button
+                                            onClick={() => copySkill(skill.id)}
+                                            className="skill-copy-btn"
+                                            title="Duplicate skill"
+                                            aria-label={`Duplicate ${skill.name}`}
+                                        >
+                                            📋
+                                        </button>
+                                        <button
+                                            onClick={() => deleteSkill(skill.id)}
+                                            className="skill-delete-btn"
+                                            title="Delete skill"
+                                            aria-label={`Delete ${skill.name}`}
+                                        >
+                                            ×
+                                        </button>
+                                    </div>
+                                </li>
+                            ))}
                         </ul>
+                        <button onClick={addSkill} className="skill-add-btn">
+                            + Add Skill
+                        </button>
                     </aside>
 
                     <section className="sections-column" aria-label="CV sections">
                         {sections.map((section) => (
-                            <div
+                            <section
                                 key={section.id}
                                 className="dropzone"
                                 data-testid={`dropzone-${section.id}`}
+                                aria-label={`Drop zone for ${section.title} section`}
                                 onDragOver={(event) => event.preventDefault()}
                                 onDrop={() => {
                                     if (draggedSectionId) {
@@ -107,7 +346,13 @@ const CVEditor = () => {
                                     data-testid={`section-card-${section.id}`}
                                     onDragStart={() => setDraggedSectionId(section.id)}
                                     onDragEnd={() => setDraggedSectionId(null)}
+                                    className={`${draggedSectionId === section.id ? 'dragging' : ''} ${section.locked ? 'locked-section' : ''}`}
                                 >
+                                    <div className="section-grab-handle" title="Drag to reorder">
+                                        <span className="grab-icon">⋮⋮</span>
+                                    </div>
+
+                                    <div className="section-content">
                                     <label htmlFor={`title-${section.id}`} className="sr-only">
                                         Section title
                                     </label>
@@ -116,13 +361,9 @@ const CVEditor = () => {
                                         className="section-title"
                                         value={section.title}
                                         onChange={(event) => {
-                                            const nextTitle = event.target.value
-                                            setSections((previous) =>
-                                                previous.map((item) =>
-                                                    item.id === section.id ? { ...item, title: nextTitle } : item,
-                                                ),
-                                            )
+                                            updateSectionTitle(section.id, event.target.value)
                                         }}
+                                        disabled={section.locked}
                                     />
 
                                     <label htmlFor={`body-${section.id}`} className="sr-only">
@@ -134,16 +375,22 @@ const CVEditor = () => {
                                         value={section.body}
                                         rows={4}
                                         onChange={(event) => {
-                                            const nextBody = event.target.value
-                                            setSections((previous) =>
-                                                previous.map((item) =>
-                                                    item.id === section.id ? { ...item, body: nextBody } : item,
-                                                ),
-                                            )
+                                            updateSectionBody(section.id, event.target.value)
                                         }}
+                                        disabled={section.locked}
                                     />
+                                    </div>
+
+                                    <button
+                                        onClick={() => toggleSectionLock(section.id)}
+                                        className={`section-lock-btn ${section.locked ? 'locked' : 'unlocked'}`}
+                                        title={section.locked ? 'Unlock section to edit' : 'Lock section to prevent edits'}
+                                        aria-label={section.locked ? 'Unlock' : 'Lock'}
+                                    >
+                                        {section.locked ? '🔒' : '🔓'}
+                                    </button>
                                 </article>
-                            </div>
+                            </section>
                         ))}
                     </section>
                 </div>
