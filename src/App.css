@@ -48,7 +48,7 @@
 
 /* Sidebar Status */
 .sidebar-status {
-  padding: 8px 0;
+  padding: 8px;
   margin-bottom: 16px;
   font-size: 0.875rem;
   display: flex;
@@ -83,50 +83,50 @@
 
 .button-print {
   width: 100%;
-  background-color: #ff9800 !important;
-  color: rgba(0, 0, 0, 0.87) !important;
-  border: none !important;
-  padding: 10px 16px !important;
-  border-radius: 4px !important;
-  cursor: pointer !important;
-  font-weight: 500 !important;
-  transition: background-color 0.2s !important;
+  background-color: #ff9800;
+  color: rgba(0, 0, 0, 0.87);
+  border: none;
+  padding: 10px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.2s;
 }
 
 .button-print:hover {
-  background-color: #f57c00 !important;
+  background-color: #f57c00;
 }
 
 .button-pdf {
   width: 100%;
-  background-color: #1b5e20 !important;
-  color: rgba(255, 255, 255, 0.95) !important;
-  border: none !important;
-  padding: 10px 16px !important;
-  border-radius: 4px !important;
-  cursor: pointer !important;
-  font-weight: 500 !important;
-  transition: background-color 0.2s !important;
+  background-color: #1b5e20;
+  color: rgba(255, 255, 255, 0.95);
+  border: none;
+  padding: 10px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.2s;
 }
 
 .button-pdf:hover {
-  background-color: #145214 !important;
+  background-color: #145214;
 }
 
 .button-reset {
   width: 100%;
-  background-color: #c62828 !important;
-  color: rgba(255, 255, 255, 0.95) !important;
-  border: none !important;
-  padding: 10px 16px !important;
-  border-radius: 4px !important;
-  cursor: pointer !important;
-  font-weight: 500 !important;
-  transition: background-color 0.2s !important;
+  background-color: #c62828;
+  color: rgba(255, 255, 255, 0.95);
+  border: none;
+  padding: 10px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.2s;
 }
 
 .button-reset:hover {
-  background-color: #b71c1c !important;
+  background-color: #b71c1c;
 }
 
 /* Reset Confirmation Modal */
@@ -171,28 +171,28 @@
 }
 
 .modal-actions button {
-  padding: 10px 24px !important;
-  border-radius: 4px !important;
-  font-weight: 500 !important;
-  cursor: pointer !important;
-  border: 1px solid transparent !important;
+  padding: 10px 24px;
+  border-radius: 4px;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1px solid transparent;
 }
 
 .modal-actions button:first-child {
-  background-color: #e0e0e0 !important;
-  color: rgba(0, 0, 0, 0.87) !important;
+  background-color: #e0e0e0;
+  color: rgba(0, 0, 0, 0.87);
 }
 
 .modal-actions button:first-child:hover {
-  background-color: #d0d0d0 !important;
+  background-color: #d0d0d0;
 }
 
 .button-destructive {
-  background-color: #c62828 !important;
-  color: rgba(255, 255, 255, 0.95) !important;
+  background-color: #c62828;
+  color: rgba(255, 255, 255, 0.95);
 }
 
 .button-destructive:hover {
-  background-color: #d32f2f !important;
+  background-color: #d32f2f;
 }
 

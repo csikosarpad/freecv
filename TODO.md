@@ -66,7 +66,15 @@ Why pnpm:
 - [x] Persist section additions/deletions to localStorage.
 - [x] Add visual feedback for section creation and deletion actions.
 
-## 9) Execution order
+## 9) Component Refactoring
+
+- [x] Split CVEditor into logical components (SidePanel, SectionsPanel).
+- [x] Move Personal + Skills logic to SidePanel.tsx.
+- [x] Move Sections logic to SectionsPanel.tsx.
+- [x] Keep CVEditor focused on header editing and composition.
+- [x] Maintain all functionality and state management.
+
+## 10) Execution order
 
 1. Package manager migration to pnpm.
 2. Testing stack setup and baseline tests.
@@ -76,3 +84,4 @@ Why pnpm:
 6. Drag-and-drop and interaction improvements.
 7. Responsive design and print optimization.
 8. Sections management (add/delete).
+9. Component refactoring (split into logical components).

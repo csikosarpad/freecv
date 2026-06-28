@@ -41,11 +41,11 @@ const SideBar = ({ isSaving, onReset }: SideBarProps) => {
                 )}
             </div>
 
-            <ul>
+            {/* <ul>
                 <li>Edit sections</li>
                 <li>Reorder blocks</li>
                 <li>Print CV</li>
-            </ul>
+            </ul> */}
 
             <div className="sidebar-actions">
                 <button 

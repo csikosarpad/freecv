@@ -1,0 +1,121 @@
+/* Print Stylesheet for CV Editor */
+/* Used for printing and PDF export */
+
+@media print {
+  body {
+    background-color: white;
+  }
+
+  .main-container {
+    flex-direction: column;
+    height: auto;
+    width: auto;
+  }
+
+  .sidebar {
+    display: none;
+  }
+
+  .editor-content {
+    background-color: white;
+    height: auto;
+    width: auto;
+    padding: 0;
+  }
+
+  .cv-frame {
+    width: 210mm;
+    height: 297mm;
+    margin: 0;
+    padding: 0;
+    box-shadow: none;
+    outline: none;
+    page-break-after: always;
+  }
+
+  /* Hide all editing UI elements */
+  .header-display {
+    cursor: default;
+  }
+
+  .header-display:hover {
+    background-color: inherit;
+  }
+
+  .header-edit-hint {
+    display: none;
+  }
+
+  .personal-display:hover {
+    background-color: inherit;
+  }
+
+  .personal-edit-hint {
+    display: none;
+  }
+
+  .skill-item {
+    background-color: transparent;
+  }
+
+  .skill-drag-handle,
+  .skill-delete-btn,
+  .skill-copy-btn,
+  .skill-add-btn,
+  .skill-actions {
+    display: none;
+  }
+
+  .section-grab-handle,
+  .section-lock-btn,
+  .section-delete-btn,
+  .section-add-btn {
+    display: none;
+  }
+
+  .section-title,
+  .section-body {
+    border: none;
+    resize: none;
+    background-color: transparent;
+    color: inherit;
+    height: min-content;
+  }
+
+  .section-title:focus,
+  .section-body:focus {
+    outline: none;
+  }
+
+  input[type='text'],
+  input[type='range'],
+  textarea {
+    border: none;
+    background-color: transparent;
+  }
+
+  input[type='text']:focus,
+  input[type='range']:focus,
+  textarea:focus {
+    outline: none;
+  }
+
+  .skill-progress-slider {
+    display: none;
+  }
+
+  .skill-progress-value {
+    display: none;
+  }
+
+  /* Show only content for printing */
+  [draggable='true'] {
+    outline: none;
+  }
+
+  progress {
+    display: block;
+    width: 100%;
+    height: 5px;
+  }
+}
