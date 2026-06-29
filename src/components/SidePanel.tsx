@@ -142,7 +142,7 @@ const SidePanel = ({ cvData, setCVData }: SidePanelProps) => {
             <li>{cvData.personal.phone}</li>
             <li>{cvData.personal.email}</li>
           </ul>
-          <div className="personal-edit-hint">Click to edit</div>
+          {/* <span className="personal-edit-hint">Click to edit</span> */}
         </button>
       )}
 
@@ -185,13 +185,18 @@ const SidePanel = ({ cvData, setCVData }: SidePanelProps) => {
                   className="skill-progress-slider"
                   aria-label={`${skill.name} progress`}
                 />
+                <progress
+                  value={skill.progress}
+                  max="100"
+                  className="skill-progress-bar"
+                />
                 <span className="skill-progress-value">{skill.progress}%</span>
               </div>
             </div>
             <div className="skill-actions">
               <button
                 onClick={() => copySkill(skill.id)}
-                className="skill-copy-btn"
+                className="skill-copy-btn skill-action-btn"
                 title="Duplicate skill"
                 aria-label={`Duplicate ${skill.name}`}
               >
@@ -199,7 +204,7 @@ const SidePanel = ({ cvData, setCVData }: SidePanelProps) => {
               </button>
               <button
                 onClick={() => deleteSkill(skill.id)}
-                className="skill-delete-btn"
+                className="skill-delete-btn skill-action-btn"
                 title="Delete skill"
                 aria-label={`Delete ${skill.name}`}
               >

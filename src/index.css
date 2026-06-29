@@ -2,7 +2,8 @@
   --dark-grey-1: #767270;
   --middle-cream: #ece4e1;
   --offwhite: #fdfdfd;
-  --triangle-border-width: 148px;
+  --aside-width: 200px;
+  --button-bg-color: #1976d2;
 
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -19,7 +20,7 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-a {
+/* a {
   font-weight: 500;
   color: #646cff;
   text-decoration: inherit;
@@ -27,7 +28,7 @@ a {
 
 a:hover {
   color: #535bf2;
-}
+} */
 
 body {
   margin: 0;
@@ -47,7 +48,7 @@ h2,
   font-size: 1.5em;
 }
 
-button {
+/* button {
   border-radius: 8px;
   border: 1px solid transparent;
   padding: 0.6em 1.2em;
@@ -64,7 +65,7 @@ button:hover {
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
-}
+} */
 
 @media (prefers-color-scheme: light) {
   :root {
@@ -77,7 +78,7 @@ button:focus-visible {
   }
 
   button {
-    background-color: #f9f9f9;
+    /* background-color: #f9f9f9; */
   }
 }
 
@@ -121,6 +122,7 @@ button:focus-visible {
         background-color: var(--dark-grey-1);
         color: #fff;
         width: 100%;
+        border-radius: 5px 5px 0 0;
 
         section {
           padding: 0.5rem;
@@ -140,7 +142,7 @@ button:focus-visible {
         }
 
         .header-display:hover {
-          background-color: rgba(0, 0, 0, 0.7);
+          /* background-color: rgba(0, 0, 0, 0.7); */
         }
 
         .header-display h2,
@@ -193,6 +195,7 @@ button:focus-visible {
           font-family: inherit;
           background-color: #fff;
           color: rgba(0, 0, 0, 0.87);
+          width: stretch;
         }
 
         .edit-done {
@@ -210,39 +213,77 @@ button:focus-visible {
           background-color: #45a049;
         }
 
-        .personal-display {
+        
+      }
+
+      .cv-content {
+        display: grid;
+        grid-template-columns: var(--aside-width) 1fr;
+        background-color: var(--offwhite);
+        height: 100%;
+        width: 100%;
+        padding: 0;
+        margin: 0;
+
+        aside {
+          padding: 0.5rem;
+          position: relative;
+          background-color: var(--middle-cream);
+          width: calc(var(--aside-width) - calc(2 * 0.5rem));
+
+          h2 {
+            padding: 0;
+            margin: 2.5rem 0 1rem;
+          }
+
+          &::before {
+            content: '';
+            position: absolute;
+            border-left: calc(var(--aside-width) / 2) solid transparent;
+            border-right: calc(var(--aside-width) / 2) solid transparent;
+            border-top: 28px solid var(--dark-grey-1);
+            width: 0;
+            top: 0;
+            left: 0;
+          }
+
+
+.personal-display {
           cursor: pointer;
           position: relative;
           transition: background-color 0.2s;
           background: none;
-          border: none;
+          border: 0;
           padding: 0.5rem;
           font-family: inherit;
           color: inherit;
           text-align: left;
-          width: 100%;
+          width: stretch;
+          
+          &:hover {
+            background-color: rgba(0, 0, 0, 0.1);
+          }
+
+          ul {
+            margin: 0;
+            list-style-type: none;
+            padding: 0;
+
+            li {
+              margin: 0.25rem 0;
+              text-align: left;
+            }
+          }
+
+          /* .personal-edit-hint {
+            font-size: 0.5rem;
+            color: rgba(0, 0, 0, 0.1);
+            margin-top: 0.25rem;
+            font-style: italic;
+          } */
         }
 
-        .personal-display:hover {
-          background-color: rgba(0, 0, 0, 0.1);
-        }
-
-        .personal-display ul {
-          margin: 0;
-          list-style-type: none;
-          padding: 0;
-        }
-
-        .personal-display li {
-          margin: 0.25rem 0;
-        }
-
-        .personal-edit-hint {
-          font-size: 0.5rem;
-          opacity: 0.6;
-          margin-top: 0.25rem;
-          font-style: italic;
-        }
+        
 
         .personal-edit {
           padding: 1rem;
@@ -250,46 +291,18 @@ button:focus-visible {
           flex-direction: column;
           gap: 1rem;
         }
-      }
 
-      .cv-content {
-        display: flex;
-        flex-direction: row;
-        background-color: var(--offwhite);
-        height: 100%;
-        width: 100%;
-
-        aside {
-          padding: 0.5rem;
-          position: relative;
-          background-color: var(--middle-cream);
-
-          h2 {
-            padding: 0;
-            margin: 2.5rem 0 1rem;
-          }
-
-
-
-          &::before {
-            content: '';
-            position: absolute;
-            border-left: var(--triangle-border-width) solid transparent;
-            border-right: var(--triangle-border-width) solid transparent;
-            border-top: 30px solid var(--dark-grey-1);
-            width: calc(100% - calc(2 * var(--triangle-border-width)));
-            top: 0;
-            left: 0;
-          }
         }
 
         .sections-column {
-          padding: 0;
-          width: 100%;
-
-          article:first-child {
-            padding-top: 1rem;
-          }
+            padding: 24px 1rem 1rem;
+            gap: 6px;
+            display: grid;
+            grid-auto-flow: row;
+            align-content: start;
+            article:first-child {
+              padding-top: 1rem;
+            }
         }
 
         ul {
@@ -305,44 +318,50 @@ button:focus-visible {
         }
 
         .skill-item {
+          position: relative;
           display: flex;
+          flex-direction: column;
           align-items: center;
           gap: 0.5rem;
           padding: 0.5rem;
-          background-color: rgba(255, 255, 255, 0.5);
+          /* background-color: rgba(255, 255, 255, 0.5); */
           border-radius: 4px;
           cursor: grab;
           transition: all 0.2s ease;
           user-select: none;
-        }
-
-        .skill-item:active {
-          cursor: grabbing;
-        }
-
-        .skill-item.dragging {
-          opacity: 0.6;
-          background-color: rgba(255, 152, 0, 0.3);
-          border: 2px solid #ff9800;
-        }
+          &:active {
+            cursor: grabbing;
+          }
+          &.dragging {
+            opacity: 0.6;
+            background-color: rgba(255, 152, 0, 0.3);
+            border: 2px solid #ff9800;
+          }
 
         .skill-drag-handle {
+          position: absolute;
+          left: 0;
+          top: 0;
           display: flex;
           align-items: center;
-          justify-content: center;
+          justify-content: flex-start;
           min-width: 20px;
+          width: 100%;
           color: #999;
           cursor: grab;
           font-size: 0.875rem;
           user-select: none;
-        }
-
-        .skill-drag-handle:active {
-          cursor: grabbing;
-        }
-
-        .skill-item.dragging .skill-drag-handle {
-          color: #ff9800;
+          span {
+            padding: 0 0.25rem;
+            background-color: rgba(0, 0, 0, 0.1);
+            border-radius: 3px;
+          }
+          &:active {
+            cursor: grabbing;
+          }
+          .skill-drag-handle {
+            color: #ff9800;
+          }
         }
 
         .skill-content {
@@ -370,77 +389,107 @@ button:focus-visible {
 
         .skill-name-input:focus {
           outline: none;
-          border-color: #1976d2;
+          border-color: var(--button-bg-color);
         }
 
         .skill-progress-container {
           display: flex;
           align-items: center;
           gap: 0.5rem;
-        }
 
-        .skill-progress-slider {
-          flex: 1;
-          height: 4px;
-          accent-color: #ff9800;
-          cursor: pointer;
-        }
+          .skill-progress-slider {
+            display: none;
+            flex: 1;
+            height: 3px;
+            accent-color: #ff9800;
+            cursor: pointer;
+          }
 
-        .skill-progress-value {
-          font-size: 0.75rem;
-          font-weight: 500;
-          min-width: 35px;
-          text-align: right;
-        }
+          .skill-progress-bar {
+            flex: 1;
+            height: 3px;
+            margin-bottom: 4px;
+            background-color: #e0e0e0;
+            border-radius: 2px;
+            overflow: hidden;
+          }
+
+          .skill-progress-value {
+            display: none;
+            position: absolute;
+            z-index: 1;
+            top: 0.5rem;
+            right: 2.5rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+            min-width: 35px;
+            text-align: right;
+          }
+
+
+          &:hover .skill-progress-slider,
+          &:hover .skill-progress-value {
+            display: block;
+          }
+          &:hover .skill-progress-bar {
+            display: none;
+          }
+
+        }        
 
         .skill-actions {
-          display: flex;
+          position: absolute;
+          display: none;          
+          justify-content: flex-end;
+          width: 100%;
           gap: 0.25rem;
           align-items: center;
+          right: -3px;
+          top: 0;
+
+          .skill-action-btn {
+            padding: 0;
+            min-width: 20px;
+            background-color: transparent;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 0.875rem;
+            line-height: 1;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.2s ease;
+
+              &:hover {
+                background-color: rgba(0, 0, 0, 0.1);
+                scale: 1.1;
+              }
+          }
+
+          .skill-copy-btn {
+              &:hover {
+                background-color: #1565c0;
+              }
+          }
+
+          .skill-delete-btn {
+            color: #c62828;
+            &:hover {
+              background-color: #d32f2f;
+              color: rgba(255, 255, 255, 0.95);
+            }
+          }
         }
 
-        .skill-copy-btn {
-          padding: 0;
-          min-width: 24px;
-          background-color: #1976d2;
-          color: rgba(255, 255, 255, 0.95);
-          border: none;
-          border-radius: 3px;
-          cursor: pointer;
-          font-size: 0.875rem;
-          line-height: 1;
-          width: 24px;
-          height: 24px;
+        &:hover .skill-actions {
           display: flex;
-          align-items: center;
-          justify-content: center;
-          transition: background-color 0.2s ease;
+          opacity: 1;
         }
-
-        .skill-copy-btn:hover {
-          background-color: #1565c0;
-        }
-
-        .skill-delete-btn {
-          padding: 0;
-          min-width: 24px;
-          background-color: #c62828;
-          color: rgba(255, 255, 255, 0.95);
-          border: none;
-          border-radius: 3px;
-          cursor: pointer;
-          font-size: 1.2rem;
-          line-height: 1;
-          width: 24px;
-          height: 24px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        }
-
-        .skill-delete-btn:hover {
-          background-color: #d32f2f;
-        }
+        
+      }
 
         .skill-add-btn {
           width: 100%;
@@ -482,14 +531,14 @@ button:focus-visible {
 }
 
 [draggable]:hover {
-  outline: 1px dashed rgba(0, 0, 0, 0.3);
+  /* outline: 1px dashed rgba(0, 0, 0, 0.3); */
   background-color: rgba(255, 152, 0, 0.1);
 }
 
 [draggable='true'] {
-  outline: 1px dashed rgba(0, 255, 0, 0.3);
+  /* outline: 1px dashed rgba(0, 255, 0, 0.3); */
   cursor: move;
-  color: green;
+  /* color: green; */
 }
 
 [draggable='false']:hover {
@@ -515,10 +564,10 @@ button:focus-visible {
 article {
   display: flex;
   align-items: flex-start;
-  padding: 12px;
+  padding: 0;
   background-color: rgba(255, 255, 255, 0.7);
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  border-radius: 4px;
+  /* border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 4px; */
   margin-bottom: 12px;
 }
 
@@ -533,6 +582,9 @@ article {
 
 /* Grab Handle & Drag-and-Drop Enhancements */
 .section-grab-handle {
+  position: absolute;
+  left: 0;
+  top: 0;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -541,26 +593,36 @@ article {
   margin-right: 8px;
   cursor: grab;
   border-radius: 4px;
-  background-color: rgba(255, 152, 0, 0.1);
-  transition: background-color 0.2s;
+  /* background-color: rgba(255, 152, 0, 0.1);
+  transition: background-color 0.2s; */
   flex-shrink: 0;
+    .grab-icon {
+      display: none;
+      font-weight: bold;
+      color: #ff9800;
+      font-size: 1.25rem;
+      user-select: none;
+    }
+  &:hover {
+    background-color: rgba(255, 152, 0, 0.1);
+    transition: background-color 0.2s;
+
+    /* background-color: rgba(255, 152, 0, 0.3); */
+    cursor: grab;
+    .grab-icon {
+      display: block;
+    }
+  }
+  &:active {
+    cursor: grabbing;
+  }
+
 }
 
-.section-grab-handle:hover {
-  background-color: rgba(255, 152, 0, 0.3);
-  cursor: grab;
-}
 
-.section-grab-handle:active {
-  cursor: grabbing;
-}
 
-.grab-icon {
-  font-weight: bold;
-  color: #ff9800;
-  font-size: 1.25rem;
-  user-select: none;
-}
+
+
 
 article[draggable='true'] {
   cursor: grab;
@@ -760,7 +822,8 @@ article[draggable='true']:active {
 .section-body {
   width: 100%;
   margin-top: 0.5rem;
-  border: 1px solid rgba(0, 0, 0, 0.2);
+  /* border: 1px solid rgba(0, 0, 0, 0.2); */
+  border: 0;
   border-radius: 4px;
   font: inherit;
   resize: none;
@@ -808,7 +871,6 @@ article[draggable='true']:active {
 
   .sections-column {
     width: 100%;
-    /* padding: 0.5rem; */
   }
 
   .header-display h2 {

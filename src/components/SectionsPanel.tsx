@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
-import type { CVData } from '../App'
+import type { CVData, CVSection } from '../App'
 
 interface SectionsPanelProps {
   cvData: CVData
@@ -97,6 +97,14 @@ const SectionsPanel = ({ cvData, setCVData }: SectionsPanelProps) => {
     setSectionToDelete(null)
   }
 
+  const getSectionCardClassName = (section: CVSection) => {
+    let className = ''
+    //`${draggedSectionId === section.id ? 'dragging' : ''} ${section.locked ? 'locked-section' : ''}`
+    className += ` ${draggedSectionId === section.id ? 'dragging' : ''}`
+    className += ` ${section.locked ? 'locked-section' : ''}`
+    return className;
+  }
+
   return (
     <>
       <section className="sections-column" aria-label="CV sections">
@@ -119,7 +127,7 @@ const SectionsPanel = ({ cvData, setCVData }: SectionsPanelProps) => {
               data-testid={`section-card-${section.id}`}
               onDragStart={() => setDraggedSectionId(section.id)}
               onDragEnd={() => setDraggedSectionId(null)}
-              className={`${draggedSectionId === section.id ? 'dragging' : ''} ${section.locked ? 'locked-section' : ''}`}
+              className={`section-card ${getSectionCardClassName(section)}`}
             >
               <div className="section-grab-handle" title="Drag to reorder">
                 <span className="grab-icon">⋮⋮</span>

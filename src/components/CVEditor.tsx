@@ -69,7 +69,7 @@ const CVEditor = ({ cvData, setCVData, isSaving }: CVEditorProps) => {
                         >
                             <h2>{cvData.header.name}</h2>
                             <h3>{cvData.header.title}</h3>
-                            <div className="header-edit-hint">Click to edit</div>
+                            {/* <div className="header-edit-hint">Click to edit</div> */}
                         </button>
                     )}
                 </header>
