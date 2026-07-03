@@ -1,9 +1,33 @@
+import { useI18n } from '../i18n-context'
+import type { Locale } from '../i18n-data'
+
 interface SideBarProps {
   isSaving: boolean
+    canUndo: boolean
+    canRedo: boolean
+    theme: 'light' | 'dark'
+    locale: Locale
+    onUndo: () => void
+    onRedo: () => void
+    onToggleTheme: () => void
+    onLocaleChange: (locale: Locale) => void
   onReset: () => void
 }
 
-const SideBar = ({ isSaving, onReset }: SideBarProps) => {
+const SideBar = ({
+    isSaving,
+    canUndo,
+    canRedo,
+    theme,
+    locale,
+    onUndo,
+    onRedo,
+    onToggleTheme,
+    onLocaleChange,
+    onReset,
+}: SideBarProps) => {
+        const { t } = useI18n()
+
     const handlePDFExport = async () => {
         const element = document.querySelector('.cv-frame')
         if (!element || !(element instanceof HTMLElement)) {
@@ -34,45 +58,63 @@ const SideBar = ({ isSaving, onReset }: SideBarProps) => {
     }
     return (
         <aside className="sidebar frame-container" aria-label="Editor actions">
-            <h1>FREE CV Editor</h1>
+            <h1>{t('appTitle')}</h1>
             
             <div className="sidebar-status">
                 {isSaving && (
                     <output className="saving-status">
                         <span className="saving-dot">●</span>
-                        {' Saving...'}
+                        {` ${t('saving')}`}
                     </output>
                 )}
                 {!isSaving && (
                     <output className="saved-status">
-                        {'✓ Saved'}
+                        {`✓ ${t('saved')}`}
                     </output>
                 )}
             </div>
 
-            {/* <ul>
-                <li>Edit sections</li>
-                <li>Reorder blocks</li>
-                <li>Print CV</li>
-            </ul> */}
-
             <div className="sidebar-actions">
+                <div className="sidebar-preferences">
+                    <button onClick={onToggleTheme} className="button-secondary" type="button">
+                        {theme === 'light' ? t('darkMode') : t('lightMode')}
+                    </button>
+                    <label className="sidebar-select-field">
+                        <span>{t('language')}</span>
+                        <select
+                            className="sidebar-select"
+                            value={locale}
+                            onChange={(event) => onLocaleChange(event.target.value as Locale)}
+                        >
+                            <option value="en">{t('english')}</option>
+                            <option value="hu">{t('hungarian')}</option>
+                        </select>
+                    </label>
+                </div>
+                <div className="history-actions" aria-label={t('historyActions')}>
+                    <button onClick={onUndo} className="button-secondary" disabled={!canUndo}>
+                        {t('undo')}
+                    </button>
+                    <button onClick={onRedo} className="button-secondary" disabled={!canRedo}>
+                        {t('redo')}
+                    </button>
+                </div>
                 <button 
                     onClick={() => globalThis.print()} 
                     className="button-print" 
-                    title="Print your CV"
+                    title={t('printCvTitle')}
                 >
-                    🖨️ Print CV
+                    {`🖨️ ${t('printCv')}`}
                 </button>
                 <button 
                     onClick={handlePDFExport} 
                     className="button-pdf" 
-                    title="Export CV as PDF"
+                    title={t('exportPdfTitle')}
                 >
-                    📄 Export PDF
+                    {`📄 ${t('exportPdf')}`}
                 </button>
-                <button onClick={onReset} className="button-reset" title="Reset all CV data">
-                    Reset All
+                <button onClick={onReset} className="button-reset" title={t('resetAllTitleAttr')}>
+                    {t('resetAll')}
                 </button>
             </div>
         </aside>

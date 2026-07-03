@@ -1,9 +1,12 @@
 import './App.css'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import SideBar from './components/SideBar.tsx'
 import CVEditor from './components/CVEditor.tsx'
 import { useLocalStorage, removeFromLocalStorage } from './hooks/useLocalStorage.ts'
+import { useHistoryState } from './hooks/useHistoryState.ts'
+import { I18nProvider } from './i18n.tsx'
+import { getTranslations, type Locale } from './i18n-data'
 
 export type CVHeaderData = {
   name: string
@@ -34,6 +37,8 @@ export type CVData = {
   skills: CVSkill[]
   sections: CVSection[]
 }
+
+type Theme = 'light' | 'dark'
 
 const initialCVData: CVData = {
   header: {
@@ -73,37 +78,72 @@ const initialCVData: CVData = {
 }
 
 function App() {
-  const [cvData, setCVData, isSaving] = useLocalStorage<CVData>('cv-data', initialCVData)
+  const [storedCvData, setStoredCvData, isSaving] = useLocalStorage<CVData>('cv-data', initialCVData)
+  const [theme, setTheme] = useLocalStorage<Theme>('cv-theme', 'light')
+  const [locale, setLocale] = useLocalStorage<Locale>('cv-locale', 'en')
+  const {
+    value: cvData,
+    setValue: setCVData,
+    undo,
+    redo,
+    clearHistory,
+    canUndo,
+    canRedo,
+  } = useHistoryState(storedCvData, setStoredCvData)
   const [showResetConfirm, setShowResetConfirm] = useState(false)
+  const messages = getTranslations(locale)
+
+  useEffect(() => {
+    document.body.dataset.theme = theme
+
+    return () => {
+      delete document.body.dataset.theme
+    }
+  }, [theme])
 
   const handleReset = () => {
     removeFromLocalStorage('cv-data')
     setCVData(initialCVData)
+    clearHistory()
     setShowResetConfirm(false)
   }
 
+  const toggleTheme = () => {
+    setTheme((currentTheme) => (currentTheme === 'light' ? 'dark' : 'light'))
+  }
+
   return (
-    <div className="main-container">
-      <SideBar
-        isSaving={isSaving}
-        onReset={() => setShowResetConfirm(true)}
-      />
-      {showResetConfirm && (
-        <div className="reset-confirm-modal" role="alertdialog" aria-modal="true">
-          <div className="modal-content">
-            <h2>Reset All Data?</h2>
-            <p>This will delete all your CV data. This action cannot be undone.</p>
-            <div className="modal-actions">
-              <button onClick={() => setShowResetConfirm(false)}>Cancel</button>
-              <button onClick={handleReset} className="button-destructive">
-                Reset All
-              </button>
+    <I18nProvider locale={locale}>
+      <div className="main-container">
+        <SideBar
+          isSaving={isSaving}
+          canUndo={canUndo}
+          canRedo={canRedo}
+          theme={theme}
+          locale={locale}
+          onUndo={undo}
+          onRedo={redo}
+          onToggleTheme={toggleTheme}
+          onLocaleChange={setLocale}
+          onReset={() => setShowResetConfirm(true)}
+        />
+        {showResetConfirm && (
+          <div className="reset-confirm-modal" role="alertdialog" aria-modal="true">
+            <div className="modal-content">
+              <h2>{messages.resetAllTitle}</h2>
+              <p>{messages.resetAllDescription}</p>
+              <div className="modal-actions">
+                <button onClick={() => setShowResetConfirm(false)}>{messages.cancel}</button>
+                <button onClick={handleReset} className="button-destructive">
+                  {messages.resetAll}
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-      )}
-      <CVEditor cvData={cvData} setCVData={setCVData} isSaving={isSaving} />
-    </div>
+        )}
+        <CVEditor cvData={cvData} setCVData={setCVData} isSaving={isSaving} />
+      </div>
+    </I18nProvider>
   )
 }
 

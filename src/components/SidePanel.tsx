@@ -1,4 +1,5 @@
 import type { CVData } from '../App'
+import { useI18n } from '../i18n-context'
 import PersonalSection from './PersonalSection'
 import SkillsSection from './SkillsSection'
 
@@ -8,6 +9,8 @@ interface SidePanelProps {
 }
 
 const SidePanel = ({ cvData, setCVData }: SidePanelProps) => {
+  const { t } = useI18n()
+
   const updatePersonal = (field: 'phone' | 'email', value: string) => {
     setCVData((prev) => ({
       ...prev,
@@ -66,7 +69,7 @@ const SidePanel = ({ cvData, setCVData }: SidePanelProps) => {
         ...prev.skills,
         {
           id: newSkillId,
-          name: `${skillToCopy.name} (Copy)`,
+          name: `${skillToCopy.name} (${t('copySuffix')})`,
           progress: skillToCopy.progress,
         },
       ],
@@ -81,7 +84,7 @@ const SidePanel = ({ cvData, setCVData }: SidePanelProps) => {
         ...prev.skills,
         {
           id: newSkillId,
-          name: 'New Skill',
+          name: t('newSkill'),
           progress: 50,
         },
       ],

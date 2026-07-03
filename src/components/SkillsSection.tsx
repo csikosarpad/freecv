@@ -1,6 +1,7 @@
 import { useState } from 'react'
 
 import type { CVSkill } from '../App'
+import { useI18n } from '../i18n-context'
 
 interface SkillsSectionProps {
   skills: CVSkill[]
@@ -23,16 +24,18 @@ const SkillsSection = ({
 }: SkillsSectionProps) => {
   const [draggedSkillId, setDraggedSkillId] = useState<string | null>(null)
   const [dropTargetSkillId, setDropTargetSkillId] = useState<string | null>(null)
+  const { t } = useI18n()
 
   return (
     <>
-      <h2>Skills</h2>
+      <h2>{t('skills')}</h2>
       <ul className="skills-list">
         {skills.map((skill) => (
           <li
             key={skill.id}
             className={`skill-item ${draggedSkillId === skill.id ? 'dragging' : ''} ${dropTargetSkillId === skill.id ? 'drop-target' : ''}`}
             draggable
+            data-drop-label={t('dropHere')}
             onDragStart={() => {
               setDraggedSkillId(skill.id)
               setDropTargetSkillId(null)
@@ -61,7 +64,7 @@ const SkillsSection = ({
               }
             }}
           >
-            <div className="skill-drag-handle" title="Drag to reorder">
+            <div className="skill-drag-handle" title={t('dragToReorder')}>
               <span>⋮</span>
             </div>
             <div className="skill-content">
@@ -70,8 +73,8 @@ const SkillsSection = ({
                 value={skill.name}
                 onChange={(event) => onUpdateName(skill.id, event.target.value)}
                 className={`skill-name-input ${skill.name.trim() === '' ? 'invalid' : ''}`}
-                placeholder="Skill name"
-                aria-label={`Skill name: ${skill.name}`}
+                placeholder={t('skillName')}
+                aria-label={t('skillNameAria', { name: skill.name })}
               />
               <div className="skill-progress-container">
                 <input
@@ -81,7 +84,7 @@ const SkillsSection = ({
                   value={skill.progress}
                   onChange={(event) => onUpdateProgress(skill.id, Number(event.target.value))}
                   className="skill-progress-slider"
-                  aria-label={`${skill.name} progress`}
+                  aria-label={t('skillProgress', { name: skill.name })}
                 />
                 <progress value={skill.progress} max="100" className="skill-progress-bar" />
                 <span className="skill-progress-value">{skill.progress}%</span>
@@ -91,16 +94,16 @@ const SkillsSection = ({
               <button
                 onClick={() => onCopySkill(skill.id)}
                 className="skill-copy-btn skill-action-btn"
-                title="Duplicate skill"
-                aria-label={`Duplicate ${skill.name}`}
+                title={t('copyLabel')}
+                aria-label={`${t('copyLabel')} ${skill.name}`}
               >
                 📋
               </button>
               <button
                 onClick={() => onDeleteSkill(skill.id)}
                 className="skill-delete-btn skill-action-btn"
-                title="Delete skill"
-                aria-label={`Delete ${skill.name}`}
+                title={t('delete')}
+                aria-label={t('deleteSkill', { name: skill.name })}
               >
                 ×
               </button>
@@ -109,7 +112,7 @@ const SkillsSection = ({
         ))}
       </ul>
       <button onClick={onAddSkill} className="skill-add-btn">
-        + Add Skill
+        {t('addSkill')}
       </button>
     </>
   )

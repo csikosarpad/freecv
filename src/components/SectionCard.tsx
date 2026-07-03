@@ -1,4 +1,5 @@
 import type { CVSection } from '../App'
+import { useI18n } from '../i18n-context'
 
 interface SectionCardProps {
   section: CVSection
@@ -23,6 +24,8 @@ const SectionCard = ({
   onDelete,
   setTextareaRef,
 }: SectionCardProps) => {
+  const { t } = useI18n()
+
   return (
     <article
       draggable
@@ -31,13 +34,13 @@ const SectionCard = ({
       onDragEnd={onDragEnd}
       className={`section-card${isDragging ? ' dragging' : ''}${section.locked ? ' locked-section' : ''}`}
     >
-      <div className="section-grab-handle" title="Drag to reorder">
+      <div className="section-grab-handle" title={t('dragToReorder')}>
         <span className="grab-icon">⋮⋮</span>
       </div>
 
       <div className="section-content">
         <label htmlFor={`title-${section.id}`} className="sr-only">
-          Section title
+          {t('sectionTitle')}
         </label>
         <input
           id={`title-${section.id}`}
@@ -48,7 +51,7 @@ const SectionCard = ({
         />
 
         <label htmlFor={`body-${section.id}`} className="sr-only">
-          Section body
+          {t('sectionBody')}
         </label>
         <textarea
           id={`body-${section.id}`}
@@ -64,16 +67,16 @@ const SectionCard = ({
         <button
           onClick={onToggleLock}
           className={`section-lock-btn ${section.locked ? 'locked' : 'unlocked'}`}
-          title={section.locked ? 'Unlock section to edit' : 'Lock section to prevent edits'}
-          aria-label={section.locked ? 'Unlock' : 'Lock'}
+          title={section.locked ? t('unlockSection') : t('lockSection')}
+          aria-label={section.locked ? t('unlock') : t('lock')}
         >
           {section.locked ? '🔒' : '🔓'}
         </button>
         <button
           onClick={onDelete}
           className="section-delete-btn"
-          title="Delete section"
-          aria-label={`Delete ${section.title} section`}
+          title={t('delete')}
+          aria-label={t('deleteSection', { name: section.title })}
         >
           ×
         </button>

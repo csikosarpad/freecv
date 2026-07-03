@@ -1,20 +1,24 @@
+import { useI18n } from '../i18n-context'
+
 interface SectionDeleteDialogProps {
   onCancel: () => void
   onConfirm: () => void
 }
 
 const SectionDeleteDialog = ({ onCancel, onConfirm }: SectionDeleteDialogProps) => {
+  const { t } = useI18n()
+
   return (
     <div className="delete-confirm-modal">
       <div className="modal-content">
-        <h3>Delete Section?</h3>
-        <p>Are you sure you want to delete this section? This action cannot be undone.</p>
+        <h3>{t('deleteSectionTitle')}</h3>
+        <p>{t('deleteSectionDescription')}</p>
         <div className="modal-buttons">
           <button onClick={onCancel} className="modal-cancel-btn">
-            Cancel
+            {t('cancel')}
           </button>
           <button onClick={onConfirm} className="modal-delete-btn">
-            Delete
+            {t('delete')}
           </button>
         </div>
       </div>

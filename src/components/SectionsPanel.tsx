@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react'
 import type { CVData } from '../App'
+import { useI18n } from '../i18n-context'
 import SectionCard from './SectionCard'
 import SectionDeleteDialog from './SectionDeleteDialog'
 
@@ -13,6 +14,7 @@ const SectionsPanel = ({ cvData, setCVData }: SectionsPanelProps) => {
   const [dropTargetSectionId, setDropTargetSectionId] = useState<string | null>(null)
   const [sectionToDelete, setSectionToDelete] = useState<string | null>(null)
   const textareaRefs = useRef<{ [key: string]: HTMLTextAreaElement | null }>({})
+  const { t } = useI18n()
 
   const autoResizeTextarea = (textarea: HTMLTextAreaElement) => {
     textarea.style.height = 'auto'
@@ -84,8 +86,8 @@ const SectionsPanel = ({ cvData, setCVData }: SectionsPanelProps) => {
         ...(prev.sections || []),
         {
           id: newSectionId,
-          title: 'New Section',
-          body: 'Add your content here...',
+          title: t('newSection'),
+          body: t('newSectionBody'),
           locked: false,
         },
       ],
@@ -102,13 +104,14 @@ const SectionsPanel = ({ cvData, setCVData }: SectionsPanelProps) => {
 
   return (
     <>
-      <section className="sections-column" aria-label="CV sections">
+      <section className="sections-column" aria-label={t('cvSections')}>
         {sections.map((section) => (
           <section
             key={section.id}
             className={`dropzone ${dropTargetSectionId === section.id ? 'drop-target' : ''}`}
             data-testid={`dropzone-${section.id}`}
-            aria-label={`Drop zone for ${section.title} section`}
+            data-drop-label={t('dropSectionHere')}
+            aria-label={t('dropZoneForSection', { name: section.title })}
             onDragOver={(event) => {
               event.preventDefault()
 
@@ -156,7 +159,7 @@ const SectionsPanel = ({ cvData, setCVData }: SectionsPanelProps) => {
           </section>
         ))}
         <button onClick={addSection} className="section-add-btn">
-          + Add Section
+          {t('addSection')}
         </button>
       </section>
 

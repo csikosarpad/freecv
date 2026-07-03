@@ -1,4 +1,5 @@
 import type { CVData } from '../App'
+import { useI18n } from '../i18n-context'
 import EditorHeader from './EditorHeader'
 import SidePanel from './SidePanel'
 import SectionsPanel from './SectionsPanel'
@@ -10,6 +11,8 @@ interface CVEditorProps {
 }
 
 const CVEditor = ({ cvData, setCVData, isSaving }: CVEditorProps) => {
+    const { t } = useI18n()
+
     const updateHeader = (field: 'name' | 'title', value: string) => {
         setCVData((prev) => ({
             ...prev,
@@ -18,11 +21,11 @@ const CVEditor = ({ cvData, setCVData, isSaving }: CVEditorProps) => {
     }
 
     return (
-        <section className="editor-content frame-container" aria-label="CV editor">
+        <section className="editor-content frame-container" aria-label={t('cvEditor')}>
             {isSaving && (
                 <output className="autosave-indicator">
                     <span className="saving-dot">●</span>
-                    {' Saving...'}
+                    {` ${t('saving')}`}
                 </output>
             )}
             <article className="cv-frame">

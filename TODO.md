@@ -92,8 +92,8 @@ The CV Editor now includes:
 ## 🚀 Potential Future Enhancements
 
 - [ ] Keyboard navigation and shortcuts
-- [ ] Undo/Redo functionality
-- [ ] Dark mode support
+- [x] Undo/Redo functionality
+- [x] Dark mode support
 - [ ] Multiple CV templates
 - [ ] Export to DOCX/Google Docs
 - [ ] Cloud sync (Firebase/Supabase)
@@ -102,7 +102,7 @@ The CV Editor now includes:
 - [ ] More comprehensive test coverage (integration tests)
 - [ ] E2E testing (Playwright/Cypress)
 - [ ] Performance monitoring
-- [ ] i18n (internationalization)
+- [x] i18n (internationalization)
 
 ## 🔧 Refactor Roadmap
 
