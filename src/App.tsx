@@ -3,7 +3,7 @@ import './App.css'
 import { useState } from 'react'
 import SideBar from './components/SideBar.tsx'
 import CVEditor from './components/CVEditor.tsx'
-import { useLocalStorage, clearAllLocalStorage } from './hooks/useLocalStorage.ts'
+import { useLocalStorage, removeFromLocalStorage } from './hooks/useLocalStorage.ts'
 
 export type CVHeaderData = {
   name: string
@@ -77,7 +77,7 @@ function App() {
   const [showResetConfirm, setShowResetConfirm] = useState(false)
 
   const handleReset = () => {
-    clearAllLocalStorage()
+    removeFromLocalStorage('cv-data')
     setCVData(initialCVData)
     setShowResetConfirm(false)
   }
