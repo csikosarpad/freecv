@@ -117,12 +117,14 @@ h2,
         .header-display h2 {
           font-size: 1.5em;
           line-height: 1.2;
+          padding-bottom: 0.25rem;
         }
 
         .header-display h3 {
           font-size: 1.125em;
           line-height: 1.2;
           margin-top: 0.25rem;
+          padding-bottom: 0.25rem;
         }
 
         .header-edit-hint {
@@ -281,7 +283,7 @@ h2,
           align-items: center;
           gap: 0.5rem;
           padding: 0.5rem;
-          background-color: rgba(255, 255, 255, 0.45);
+          /* background-color: rgba(255, 255, 255, 0.45); */
           border: 1px solid transparent;
           border-radius: 4px;
           cursor: grab;
@@ -331,6 +333,7 @@ h2,
           font-size: 0.875rem;
           user-select: none;
           span {
+            display: none;
             padding: 0 0.25rem;
             background-color: rgba(0, 0, 0, 0.1);
             border-radius: 3px;
@@ -338,9 +341,14 @@ h2,
           &:active {
             cursor: grabbing;
           }
-          .skill-drag-handle {
+          /* .skill-drag-handle {
             color: #ff9800;
-          }
+          } */
+           &:hover {
+            span {
+              display: block;
+            }
+           }
         }
 
         .skill-content {
@@ -583,7 +591,7 @@ h2,
 
     body[data-theme='dark'] article,
     body[data-theme='dark'] .skill-item {
-      background-color: rgba(30, 41, 59, 0.55);
+      /* background-color: rgba(30, 41, 59, 0.55); */
     }
 
     body[data-theme='dark'] .personal-display:hover,
