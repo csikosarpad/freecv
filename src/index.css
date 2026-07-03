@@ -20,16 +20,6 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-
-a:hover {
-  color: #535bf2;
-} */
-
 body {
   margin: 0;
   padding: 0;
@@ -48,25 +38,6 @@ h2,
   font-size: 1.5em;
 }
 
-/* button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-
-button:hover {
-  border-color: #646cff;
-}
-
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-} */
-
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
@@ -75,10 +46,6 @@ button:focus-visible {
 
   a:hover {
     color: #747bff;
-  }
-
-  button {
-    /* background-color: #f9f9f9; */
   }
 }
 
@@ -139,10 +106,6 @@ button:focus-visible {
           color: #fff;
           text-align: left;
           width: 100%;
-        }
-
-        .header-display:hover {
-          /* background-color: rgba(0, 0, 0, 0.7); */
         }
 
         .header-display h2,
@@ -275,12 +238,6 @@ button:focus-visible {
             }
           }
 
-          /* .personal-edit-hint {
-            font-size: 0.5rem;
-            color: rgba(0, 0, 0, 0.1);
-            margin-top: 0.25rem;
-            font-style: italic;
-          } */
         }
 
         
@@ -324,7 +281,8 @@ button:focus-visible {
           align-items: center;
           gap: 0.5rem;
           padding: 0.5rem;
-          /* background-color: rgba(255, 255, 255, 0.5); */
+          background-color: rgba(255, 255, 255, 0.45);
+          border: 1px solid transparent;
           border-radius: 4px;
           cursor: grab;
           transition: all 0.2s ease;
@@ -333,9 +291,30 @@ button:focus-visible {
             cursor: grabbing;
           }
           &.dragging {
-            opacity: 0.6;
-            background-color: rgba(255, 152, 0, 0.3);
-            border: 2px solid #ff9800;
+            opacity: 0.85;
+            transform: scale(0.985);
+            background-color: rgba(255, 152, 0, 0.22);
+            border: 1px solid rgba(255, 152, 0, 0.8);
+            box-shadow: 0 10px 24px rgba(255, 152, 0, 0.18);
+          }
+
+          &.drop-target {
+            background-color: rgba(25, 118, 210, 0.08);
+            border-color: rgba(25, 118, 210, 0.5);
+            box-shadow: inset 0 0 0 1px rgba(25, 118, 210, 0.3);
+          }
+
+          &.drop-target::before {
+            content: 'Drop here';
+            position: absolute;
+            inset: -0.65rem auto auto 50%;
+            transform: translateX(-50%);
+            padding: 0.15rem 0.45rem;
+            border-radius: 999px;
+            background-color: #1976d2;
+            color: rgba(255, 255, 255, 0.95);
+            font-size: 0.7rem;
+            font-weight: 700;
           }
 
         .skill-drag-handle {
@@ -531,14 +510,11 @@ button:focus-visible {
 }
 
 [draggable]:hover {
-  /* outline: 1px dashed rgba(0, 0, 0, 0.3); */
   background-color: rgba(255, 152, 0, 0.1);
 }
 
 [draggable='true'] {
-  /* outline: 1px dashed rgba(0, 255, 0, 0.3); */
   cursor: move;
-  /* color: green; */
 }
 
 [draggable='false']:hover {
@@ -557,6 +533,27 @@ button:focus-visible {
     background-color: rgba(255, 152, 0, 0.05);
   }
 
+  &.drop-target {
+    outline: 2px dashed rgba(25, 118, 210, 0.55);
+    background-color: rgba(25, 118, 210, 0.08);
+    box-shadow: inset 0 0 0 1px rgba(25, 118, 210, 0.18);
+  }
+
+  &.drop-target::before {
+    content: 'Drop section here';
+    position: absolute;
+    top: -0.65rem;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 0.2rem 0.55rem;
+    border-radius: 999px;
+    background-color: #1976d2;
+    color: rgba(255, 255, 255, 0.95);
+    font-size: 0.7rem;
+    font-weight: 700;
+    z-index: 2;
+  }
+
 }
 
 
@@ -566,8 +563,6 @@ article {
   align-items: flex-start;
   padding: 0;
   background-color: rgba(255, 255, 255, 0.7);
-  /* border: 1px solid rgba(0, 0, 0, 0.1);
-  border-radius: 4px; */
   margin-bottom: 12px;
 }
 
@@ -593,8 +588,6 @@ article {
   margin-right: 8px;
   cursor: grab;
   border-radius: 4px;
-  /* background-color: rgba(255, 152, 0, 0.1);
-  transition: background-color 0.2s; */
   flex-shrink: 0;
     .grab-icon {
       display: none;
@@ -606,8 +599,6 @@ article {
   &:hover {
     background-color: rgba(255, 152, 0, 0.1);
     transition: background-color 0.2s;
-
-    /* background-color: rgba(255, 152, 0, 0.3); */
     cursor: grab;
     .grab-icon {
       display: block;
@@ -639,9 +630,10 @@ article[draggable='true']:active {
 
 /* Dragging state */
 .dragging {
-  opacity: 0.6;
-  background-color: rgba(255, 152, 0, 0.05);
-  border: 2px solid #ff9800;
+  opacity: 0.78;
+  background-color: rgba(255, 152, 0, 0.12);
+  border: 1px solid #ff9800;
+  box-shadow: 0 12px 30px rgba(255, 152, 0, 0.18);
 }
 
 /* Section content layout */
@@ -653,14 +645,14 @@ article[draggable='true']:active {
 
 /* Locked section styling */
 .locked-section {
-  opacity: 0.8;
+  /* opacity: 0.8;
   background-color: rgba(244, 67, 54, 0.05);
-  border: 1px solid rgba(244, 67, 54, 0.2);
+  border: 1px solid rgba(244, 67, 54, 0.2); */
 }
 
 .locked-section input[disabled],
 .locked-section textarea[disabled] {
-  background-color: #f5f5f5;
+  background-color: transparent;
   cursor: not-allowed;
   color: #000;
 }
@@ -684,8 +676,8 @@ article[draggable='true']:active {
     }
   }
 
-  /* Lock button styling */
-  .section-lock-btn {
+  .section-lock-btn,
+  .section-delete-btn {
     padding: 3px;
     background-color: transparent;
     border-radius: 4px;
@@ -709,16 +701,6 @@ article[draggable='true']:active {
     background-color: rgba(244, 67, 54, 0.2);
   }
 
-  .section-delete-btn {
-    padding: 3px;
-    background-color: transparent;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 1.2rem;
-    transition: all 0.2s;
-    flex-shrink: 0;
-  }
-
   .section-delete-btn:hover {
     background-color: rgba(198, 40, 40, 0.1);
     border-color: rgba(198, 40, 40, 0.5);
@@ -730,6 +712,7 @@ article[draggable='true']:active {
 
 }
 
+.skill-add-btn,
 .section-add-btn {
   width: 100%;
   padding: 0.75rem;
@@ -744,6 +727,7 @@ article[draggable='true']:active {
   transition: background-color 0.2s ease;
 }
 
+.skill-add-btn:hover,
 .section-add-btn:hover {
   background-color: #1565c0;
 }
@@ -789,15 +773,19 @@ article[draggable='true']:active {
   justify-content: center;
 }
 
-.modal-cancel-btn {
+.modal-cancel-btn,
+.modal-delete-btn {
   padding: 10px 24px;
-  background-color: #e0e0e0;
-  color: rgba(0, 0, 0, 0.87);
   border: none;
   border-radius: 4px;
   cursor: pointer;
   font-weight: 500;
   transition: background-color 0.2s;
+}
+
+.modal-cancel-btn {
+  background-color: #e0e0e0;
+  color: rgba(0, 0, 0, 0.87);
 }
 
 .modal-cancel-btn:hover {
@@ -805,14 +793,8 @@ article[draggable='true']:active {
 }
 
 .modal-delete-btn {
-  padding: 10px 24px;
   background-color: #c62828;
   color: rgba(255, 255, 255, 0.95);
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-weight: 500;
-  transition: background-color 0.2s;
 }
 
 .modal-delete-btn:hover {
@@ -822,7 +804,6 @@ article[draggable='true']:active {
 .section-body {
   width: 100%;
   margin-top: 0.5rem;
-  /* border: 1px solid rgba(0, 0, 0, 0.2); */
   border: 0;
   border-radius: 4px;
   font: inherit;

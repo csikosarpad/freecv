@@ -1,6 +1,74 @@
 /* Print Stylesheet for CV Editor */
 /* Used for printing and PDF export */
 
+body.is-exporting-pdf {
+  background-color: white;
+}
+
+body.is-exporting-pdf .cv-frame {
+  width: 210mm;
+  min-height: 297mm;
+  height: auto;
+  margin: 0;
+  padding: 0;
+  box-shadow: none;
+  outline: none;
+}
+
+body.is-exporting-pdf .cv-content {
+  min-height: calc(297mm - 70px);
+}
+
+body.is-exporting-pdf .header-display,
+body.is-exporting-pdf .personal-display,
+body.is-exporting-pdf .section-title,
+body.is-exporting-pdf .section-body,
+body.is-exporting-pdf .skill-name-input,
+body.is-exporting-pdf input[type='text'],
+body.is-exporting-pdf input[type='email'],
+body.is-exporting-pdf textarea {
+  border: none;
+  background-color: transparent;
+  box-shadow: none;
+}
+
+body.is-exporting-pdf .header-display,
+body.is-exporting-pdf .personal-display {
+  padding: 0;
+}
+
+body.is-exporting-pdf .skill-item {
+  background-color: transparent;
+  border-color: transparent;
+  box-shadow: none;
+}
+
+body.is-exporting-pdf .skill-drag-handle,
+body.is-exporting-pdf .skill-delete-btn,
+body.is-exporting-pdf .skill-copy-btn,
+body.is-exporting-pdf .skill-add-btn,
+body.is-exporting-pdf .skill-actions,
+body.is-exporting-pdf .section-grab-handle,
+body.is-exporting-pdf .section-lock-btn,
+body.is-exporting-pdf .section-delete-btn,
+body.is-exporting-pdf .section-add-btn {
+  display: none;
+}
+
+body.is-exporting-pdf .skill-progress-slider,
+body.is-exporting-pdf .skill-progress-value {
+  display: none;
+}
+
+body.is-exporting-pdf .skill-progress-bar {
+  display: block;
+}
+
+body.is-exporting-pdf .section-body {
+  min-height: 0;
+  overflow: visible;
+}
+
 @media print {
   body {
     background-color: white;
@@ -25,12 +93,17 @@
 
   .cv-frame {
     width: 210mm;
-    height: 297mm;
+    min-height: 297mm;
+    height: auto;
     margin: 0;
     padding: 0;
     box-shadow: none;
     outline: none;
     page-break-after: always;
+  }
+
+  .cv-content {
+    min-height: calc(297mm - 70px);
   }
 
   /* Hide all editing UI elements */
@@ -88,6 +161,7 @@
   }
 
   input[type='text'],
+  input[type='email'],
   input[type='range'],
   textarea {
     border: none;

@@ -1,5 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
-import type { CVData, CVSection } from '../App'
+import type { CVData } from '../App'
+import SectionCard from './SectionCard'
+import SectionDeleteDialog from './SectionDeleteDialog'
 
 interface SectionsPanelProps {
   cvData: CVData
@@ -8,6 +10,7 @@ interface SectionsPanelProps {
 
 const SectionsPanel = ({ cvData, setCVData }: SectionsPanelProps) => {
   const [draggedSectionId, setDraggedSectionId] = useState<string | null>(null)
+  const [dropTargetSectionId, setDropTargetSectionId] = useState<string | null>(null)
   const [sectionToDelete, setSectionToDelete] = useState<string | null>(null)
   const textareaRefs = useRef<{ [key: string]: HTMLTextAreaElement | null }>({})
 
@@ -97,94 +100,59 @@ const SectionsPanel = ({ cvData, setCVData }: SectionsPanelProps) => {
     setSectionToDelete(null)
   }
 
-  const getSectionCardClassName = (section: CVSection) => {
-    let className = ''
-    //`${draggedSectionId === section.id ? 'dragging' : ''} ${section.locked ? 'locked-section' : ''}`
-    className += ` ${draggedSectionId === section.id ? 'dragging' : ''}`
-    className += ` ${section.locked ? 'locked-section' : ''}`
-    return className;
-  }
-
   return (
     <>
       <section className="sections-column" aria-label="CV sections">
         {sections.map((section) => (
           <section
             key={section.id}
-            className="dropzone"
+            className={`dropzone ${dropTargetSectionId === section.id ? 'drop-target' : ''}`}
             data-testid={`dropzone-${section.id}`}
             aria-label={`Drop zone for ${section.title} section`}
-            onDragOver={(event) => event.preventDefault()}
+            onDragOver={(event) => {
+              event.preventDefault()
+
+              if (draggedSectionId && draggedSectionId !== section.id) {
+                setDropTargetSectionId(section.id)
+              }
+            }}
+            onDragLeave={() => {
+              if (dropTargetSectionId === section.id) {
+                setDropTargetSectionId(null)
+              }
+            }}
             onDrop={() => {
               if (draggedSectionId) {
                 moveSection(draggedSectionId, section.id)
                 setDraggedSectionId(null)
+                setDropTargetSectionId(null)
               }
             }}
           >
-            <article
-              draggable
-              data-testid={`section-card-${section.id}`}
-              onDragStart={() => setDraggedSectionId(section.id)}
-              onDragEnd={() => setDraggedSectionId(null)}
-              className={`section-card ${getSectionCardClassName(section)}`}
-            >
-              <div className="section-grab-handle" title="Drag to reorder">
-                <span className="grab-icon">⋮⋮</span>
-              </div>
-
-              <div className="section-content">
-                <label htmlFor={`title-${section.id}`} className="sr-only">
-                  Section title
-                </label>
-                <input
-                  id={`title-${section.id}`}
-                  className="section-title"
-                  value={section.title}
-                  onChange={(event) => {
-                    updateSectionTitle(section.id, event.target.value)
-                  }}
-                  disabled={section.locked}
-                />
-
-                <label htmlFor={`body-${section.id}`} className="sr-only">
-                  Section body
-                </label>
-                <textarea
-                  id={`body-${section.id}`}
-                  ref={(el) => {
-                    if (el) textareaRefs.current[section.id] = el
-                  }}
-                  className="section-body"
-                  value={section.body}
-                  onChange={(event) => {
-                    const textarea = event.currentTarget
-                    updateSectionBody(section.id, event.target.value)
-                    autoResizeTextarea(textarea)
-                  }}
-                  disabled={section.locked}
-                />
-              </div>
-
-              <div className="section-actions">
-              <button
-                onClick={() => toggleSectionLock(section.id)}
-                className={`section-lock-btn ${section.locked ? 'locked' : 'unlocked'}`}
-                title={section.locked ? 'Unlock section to edit' : 'Lock section to prevent edits'}
-                aria-label={section.locked ? 'Unlock' : 'Lock'}
-              >
-                {section.locked ? '🔒' : '🔓'}
-              </button>
-              <button
-                onClick={() => setSectionToDelete(section.id)}
-                className="section-delete-btn"
-                title="Delete section"
-                aria-label={`Delete ${section.title} section`}
-              >
-                ×
-              </button>
-                </div>
-            </article>
+            <SectionCard
+              section={section}
+              isDragging={draggedSectionId === section.id}
+              onDragStart={() => {
+                setDraggedSectionId(section.id)
+                setDropTargetSectionId(null)
+              }}
+              onDragEnd={() => {
+                setDraggedSectionId(null)
+                setDropTargetSectionId(null)
+              }}
+              onTitleChange={(newTitle) => updateSectionTitle(section.id, newTitle)}
+              onBodyChange={(newBody, textarea) => {
+                updateSectionBody(section.id, newBody)
+                autoResizeTextarea(textarea)
+              }}
+              onToggleLock={() => toggleSectionLock(section.id)}
+              onDelete={() => setSectionToDelete(section.id)}
+              setTextareaRef={(element) => {
+                if (element) {
+                  textareaRefs.current[section.id] = element
+                }
+              }}
+            />
           </section>
         ))}
         <button onClick={addSection} className="section-add-btn">
@@ -193,23 +161,10 @@ const SectionsPanel = ({ cvData, setCVData }: SectionsPanelProps) => {
       </section>
 
       {sectionToDelete && (
-        <div className="delete-confirm-modal">
-          <div className="modal-content">
-            <h3>Delete Section?</h3>
-            <p>Are you sure you want to delete this section? This action cannot be undone.</p>
-            <div className="modal-buttons">
-              <button onClick={() => setSectionToDelete(null)} className="modal-cancel-btn">
-                Cancel
-              </button>
-              <button
-                onClick={() => deleteSection(sectionToDelete)}
-                className="modal-delete-btn"
-              >
-                Delete
-              </button>
-            </div>
-          </div>
-        </div>
+        <SectionDeleteDialog
+          onCancel={() => setSectionToDelete(null)}
+          onConfirm={() => deleteSection(sectionToDelete)}
+        />
       )}
     </>
   )

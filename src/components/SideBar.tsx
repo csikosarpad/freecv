@@ -4,24 +4,33 @@ interface SideBarProps {
 }
 
 const SideBar = ({ isSaving, onReset }: SideBarProps) => {
-    const handlePDFExport = () => {
+    const handlePDFExport = async () => {
         const element = document.querySelector('.cv-frame')
         if (!element || !(element instanceof HTMLElement)) {
             alert('CV frame not found')
             return
         }
 
-        // Dynamic import to avoid issues with SSR
-        import('html2pdf.js').then((html2pdf) => {
+        document.body.classList.add('is-exporting-pdf')
+
+        try {
+            await new Promise<void>((resolve) => {
+                requestAnimationFrame(() => resolve())
+            })
+
+            const html2pdf = await import('html2pdf.js')
             const options = {
-                margin: 0,
+                margin: [6, 6, 6, 6] as [number, number, number, number],
                 filename: 'my-cv.pdf',
                 image: { type: 'png' as const, quality: 0.98 },
-                html2canvas: { scale: 2 },
-                jsPDF: { format: 'a4', orientation: 'portrait' as const },
+                html2canvas: { scale: 2, useCORS: true },
+                jsPDF: { unit: 'mm' as const, format: 'a4', orientation: 'portrait' as const },
+                pagebreak: { mode: ['css', 'legacy'] as const },
             }
-            html2pdf.default().set(options).from(element).save()
-        })
+            await html2pdf.default().set(options).from(element).save()
+        } finally {
+            document.body.classList.remove('is-exporting-pdf')
+        }
     }
     return (
         <aside className="sidebar frame-container" aria-label="Editor actions">

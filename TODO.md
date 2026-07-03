@@ -103,3 +103,29 @@ The CV Editor now includes:
 - [ ] E2E testing (Playwright/Cypress)
 - [ ] Performance monitoring
 - [ ] i18n (internationalization)
+
+## 🔧 Refactor Roadmap
+
+### 11) Component Separation Pass
+- [x] Extract the CV header editor into its own component
+- [x] Split side panel into personal details and skills subcomponents
+- [x] Split sections panel into reusable section card and section actions components
+- [ ] Move shared editor types and update helpers closer to their feature area
+
+### 12) Drag-and-Drop UX Pass
+- [x] Add explicit drop-target highlighting before drop
+- [x] Make dragged items more visually distinct while moving
+- [x] Add consistent drag states for skills and sections
+- [ ] Review keyboard and pointer accessibility for drag interactions
+
+### 13) Print & PDF Output Pass
+- [x] Rework print stylesheet for cleaner A4 output
+- [x] Reduce interactive UI leakage into print and PDF export
+- [x] Align PDF export sizing with print layout constraints
+- [ ] Verify long content overflow and page-break behavior
+
+### 14) CSS Cleanup Pass
+- [x] Consolidate repeated button, modal, and panel styles
+- [ ] Normalize nested CSS structure and selector depth
+- [x] Reduce commented dead CSS and stale overrides
+- [ ] Group shared tokens for spacing, borders, and status colors
