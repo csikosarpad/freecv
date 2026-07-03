@@ -488,152 +488,176 @@ A modern CV editor web application built with React, TypeScript and Vite. Create
 
 - **React 18.2** - UI framework
 - **TypeScript 5.2** - Type safety
-- **Vite 5.1** - Build tool & dev server
-- **pnpm 10.34** - Fast, efficient package manager
-- **Vitest + React Testing Library** - Testing framework
-- **html2pdf.js 0.14** - PDF export
-- **Vanilla CSS** - No utility frameworks, custom media queries
+# Free CV Editor
 
-## Getting started
+A modern CV editor built with React, TypeScript, and Vite. It supports inline editing, drag-and-drop reordering, local persistence, print/PDF export, undo/redo, dark mode, and bilingual UI labels.
+
+## Features
+
+### Core Editing
+- Editable CV header, personal details, skills, and free-form sections
+- Add, delete, duplicate, lock, and reorder content blocks
+- Skill progress sliders with live visual feedback
+- Undo/redo for recent CV changes
+
+### Persistence & Preferences
+- Debounced auto-save to `localStorage`
+- Safe reset that clears only this app's stored CV data
+- Persistent theme preference (`light` / `dark`)
+- Persistent locale preference (`en` / `hu`)
+
+### Print & Export
+- Print-ready A4 layout
+- PDF export via `html2pdf.js`
+- Shared styling path for browser print and PDF export cleanup
+
+### UX & Presentation
+- Native drag-and-drop with explicit drop target feedback
+- Responsive layout across mobile, tablet, laptop, and desktop widths
+- Dark mode support
+- English and Hungarian UI labels
+
+### Development Quality
+- TypeScript strict mode
+- Vitest + React Testing Library tests
+- ESLint with zero-warning policy
+- Vanilla CSS with nested rules
+
+## Tech Stack
+
+- React 18
+- TypeScript 5
+- Vite 5
+- pnpm 10
+- Vitest
+- React Testing Library
+- html2pdf.js
+- Vanilla CSS
+
+## Getting Started
 
 ```bash
 pnpm install
 pnpm dev
 ```
 
+Open the local Vite URL printed in the terminal, typically `http://localhost:5173` or `http://localhost:5174`.
+
 ## Scripts
 
-- `pnpm dev` - start development server (http://localhost:5174)
-- `pnpm build` - type-check and create production build
+- `pnpm dev` - start the development server
+- `pnpm build` - run type-check and production build
 - `pnpm preview` - preview the production build locally
-- `pnpm lint` - run ESLint with strict 0 warnings policy
+- `pnpm lint` - run ESLint with `--max-warnings 0`
 - `pnpm test` - run tests once
 - `pnpm test:watch` - run tests in watch mode
-- `pnpm test:coverage` - run tests with coverage report (60% target)
+- `pnpm test:coverage` - run tests with coverage reporting
 
 ## Testing
 
-The project uses **Vitest** with jsdom and **React Testing Library** for comprehensive testing.
+The project uses Vitest with jsdom and React Testing Library.
 
-- Test setup file: `src/test/setup.ts`
-- Test files: `src/components/*.test.tsx`
+- Test setup: `src/test/setup.ts`
+- Test files: `src/**/*.test.tsx`
 - Coverage target: 60%
-- All tests must pass before commit
 
-Run tests:
+Run tests with:
+
 ```bash
-pnpm test              # Run once
-pnpm test:watch        # Watch mode
-pnpm test:coverage     # With coverage report
+pnpm test
+pnpm test:watch
+pnpm test:coverage
 ```
 
 ## Project Structure
 
-```
+```text
 src/
 ├── components/
-│   ├── CVEditor.tsx           # Main editor with header management
-│   ├── CVEditor.test.tsx       # Editor component tests
-│   ├── SidePanel.tsx           # Personal info + skills panel
-│   ├── SectionsPanel.tsx       # CV sections management
-│   ├── SideBar.tsx             # Print, PDF export, reset buttons
-│   └── SideBar.test.tsx        # Sidebar component tests
+│   ├── CVEditor.tsx
+│   ├── CVEditor.test.tsx
+│   ├── EditorHeader.tsx
+│   ├── PersonalSection.tsx
+│   ├── SectionCard.tsx
+│   ├── SectionDeleteDialog.tsx
+│   ├── SectionsPanel.tsx
+│   ├── SideBar.test.tsx
+│   ├── SideBar.tsx
+│   ├── SidePanel.tsx
+│   └── SkillsSection.tsx
 ├── hooks/
-│   └── useLocalStorage.ts      # Custom hook for persistent state with debouncing
-├── App.tsx                     # Root component with state management
-├── App.css                     # App-level styles (buttons, modals, sidebar)
-├── index.css                   # Main stylesheet (A4 frame, responsive design, drag-drop)
-├── print.css                   # Print-specific styles (hidden UI, clean printing)
-├── main.tsx                    # React entry point
-└── test/
-    └── setup.ts                # Vitest + jsdom setup
+│   ├── useHistoryState.ts
+│   └── useLocalStorage.ts
+├── test/
+│   └── setup.ts
+├── App.css
+├── App.test.tsx
+├── App.tsx
+├── i18n-context.ts
+├── i18n-data.ts
+├── i18n.tsx
+├── index.css
+├── main.tsx
+└── print.css
 ```
-
-## Code Quality Standards
-
-✅ **No !important flags** - All styles use proper CSS specificity hierarchy  
-✅ **TypeScript strict mode** - Full type safety across codebase  
-✅ **ESLint** - Zero warnings, consistent code style  
-✅ **Accessibility** - Semantic HTML, proper ARIA labels  
-✅ **Responsive** - Mobile-first, tested across breakpoints  
 
 ## Architecture
 
-### State Management
-- Centralized state in `App.tsx` with `CVData` type
-- Custom `useLocalStorage` hook for persistence (500ms debounce)
-- State lifted to parent components for data flow
+### State Model
+- `App.tsx` owns the CV document state and app-level preferences
+- `useLocalStorage` persists CV data, theme, and locale
+- `useHistoryState` wraps the CV document with undo/redo history
 
 ### Component Hierarchy
-```
-App.tsx (state hub)
-├── SideBar (export, print, reset)
-└── CVEditor (header editing)
-    ├── SidePanel (personal info + skills)
-    └── SectionsPanel (CV sections)
-```
 
-### CSS Architecture
-- **index.css** (900+ lines) - Main styling:
-  - A4 frame dimensions & layout
-  - Responsive breakpoints (mobile, tablet, laptop, desktop, ultra-wide)
-  - Drag-and-drop visual feedback
-  - Section locking styles
-  - Component-specific styles
-- **App.css** - Sidebar buttons, modals, autosave indicator
-- **print.css** - Print media queries (hides editing UI, clean formatting)
-
-### Data Types
-```typescript
-type CVHeaderData = { name: string; title: string }
-type CVPersonalData = { phone: string; email: string }
-type CVSkill = { id: string; name: string; progress: number }
-type CVSection = { id: string; title: string; body: string; locked?: boolean }
-type CVData = { header, personal, skills[], sections[] }
+```text
+App
+├── SideBar
+│   ├── history controls
+│   ├── theme toggle
+│   ├── locale selector
+│   └── export/reset actions
+└── CVEditor
+    ├── EditorHeader
+    ├── SidePanel
+    │   ├── PersonalSection
+    │   └── SkillsSection
+    └── SectionsPanel
+        ├── SectionCard
+        └── SectionDeleteDialog
 ```
 
-## Key Features in Detail
+### Styling
+- `index.css` contains the main layout, drag/drop, responsive, and theme styling
+- `App.css` contains sidebar actions, autosave indicator, and modal styling
+- `print.css` contains print/PDF cleanup rules
+
+## Key Behaviors
+
+### Undo / Redo
+- Recent edits are tracked in local history
+- Rapid typing is grouped into a single undo step
+- History controls are available from the sidebar
+
+### Theme & Locale
+- Light and dark mode are user-selectable
+- UI labels are available in English and Hungarian
+- Both settings are restored on reload
 
 ### Drag-and-Drop
-- **Sections**: Reorder with grab handles (⋮⋮), visual feedback during drag
-- **Skills**: Reorder with drag handles, maintains order in localStorage
-- Uses native drag/drop API with custom state management
+- Sections and skills use native drag/drop
+- Dragged items and drop targets have distinct visual states
 
-### Auto-Save
-- 500ms debounced save to localStorage
-- Real-time "● Saving..." indicator in top-right
-- Automatic recovery on page reload
-- No external API required
-
-### Responsive Breakpoints
-- **Mobile (≤480px)**: Single column layout, full-width CV frame
-- **Tablet (481-768px)**: Column layout, responsive widths
-- **Laptop (769-1024px)**: Side-by-side editor & sidebar
-- **Desktop (1025px+)**: Fixed A4 frame, wide sidebar
-- **Ultra-wide (1440px+)**: Increased padding
-
-### Print/PDF Export
-- Print button triggers browser print dialog
-- PDF export uses html2pdf.js with:
-  - A4 page size
-  - 2x scale for crisp output
-  - Automatic hiding of editing UI
-- Compatible with all major browsers
-
-## Development Workflow
-
-1. **Start dev server**: `pnpm dev`
-2. **Edit components**: React Hot Module Replacement (HMR) enabled
-3. **Run tests**: `pnpm test:watch`
-4. **Check linting**: `pnpm lint`
-5. **Build**: `pnpm build` (includes type checking)
+### Print / PDF Export
+- Print uses the browser print dialog
+- PDF export uses `html2pdf.js` with A4 sizing and export-specific cleanup
 
 ## Browser Support
 
-- Chrome/Edge (latest)
-- Firefox (latest)
-- Safari (latest)
-- Mobile browsers (iOS Safari, Chrome Mobile)
+- Chrome / Edge
+- Firefox
+- Safari
+- Mobile browsers with modern CSS and drag/drop support
 
 ## License
 
